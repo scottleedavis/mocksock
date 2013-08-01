@@ -9,5 +9,5 @@ end
 
 get '/bundle.js' do
   content_type 'application/x-javascript'
-  JBundle.build('sockete.js').src
+  JBundle.build('mocksock.js').src
 end

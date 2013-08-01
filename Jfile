@@ -1,12 +1,12 @@
-target_dir './dist'
+target_dir 'dist'
 
-src_dir './src'
+src_dir 'src'
 
-version '0.0.1'
+version '0.0.2'
 
-bundle 'sockete.js' do
+bundle 'mocksock.js' do
   license 'license.txt'
-  file 'sockete.js'
+  file 'mocksock.js'
   file 'request.js'
   file 'response.js'
   file 'client.js'
@@ -15,5 +15,5 @@ bundle 'sockete.js' do
 end
 
 filter do |src, config|
-  src.gsub! /<VERSION>/, config.version.to_s
+  src.gsub(/<VERSION>/, config.version.to_s)
 end

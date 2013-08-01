@@ -2,19 +2,19 @@
   
   // WebSocket mock. It is important that it implements the same API and public attributes
   // so we only add those to the prototype.
-  Sockete.clients = [];
+  Mocksock.clients = [];
   
-  Sockete.Client = function (url) {
+  Mocksock.Client = function (url) {
     
     // Stubs
     this.onmessage = function (evt) {
-      Sockete.logEvent(evt);
+      Mocksock.logEvent(evt);
     }
     this.onclose = function (evt) {
-      Sockete.logEvent(evt);
+      Mocksock.logEvent(evt);
     }
     this.onopen = function (evt) {
-      Sockete.logEvent(evt);
+      Mocksock.logEvent(evt);
     }
     
     var url = url;
@@ -27,13 +27,13 @@
     
     this.close = function () {
       readyState(2);
-      var request = new Sockete.Request(self, 'close');
+      var request = new Mocksock.Request(self, 'close');
       self.__server.request(request, dispatch);
     }
     
     this.send = function (msg) {
       if(this.readyState != 1) return false;
-      var request = new Sockete.Request(self, 'message', msg);
+      var request = new Mocksock.Request(self, 'message', msg);
       self.__server.request(request, dispatch);
       return true;
     }
@@ -52,15 +52,15 @@
     }
     
     function connect () {
-      self.__server = Sockete.Server.find(url);
-      if (!self.__server) throw('[Sockete.Client#connect] No server configured for URL ' + url)
-      var request = new Sockete.Request(self, 'open')
+      self.__server = Mocksock.Server.find(url);
+      if (!self.__server) throw('[Mocksock.Client#connect] No server configured for URL ' + url)
+      var request = new Mocksock.Request(self, 'open')
       self.__server.request(request, dispatch);
     }
-    setTimeout(connect, Sockete.settings.connecttion_delay);
+    setTimeout(connect, Mocksock.settings.connecttion_delay);
     
-    Sockete.clients.push(this);
-    this.__sockete_id = Sockete.clients.length;
+    Mocksock.clients.push(this);
+    this.__mocksock_id = Mocksock.clients.length;
   }
   
   

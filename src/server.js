@@ -1,13 +1,13 @@
 (function () {
   
-  Sockete.Server = function (url) {
+  Mocksock.Server = function (url) {
     this.url = this.URL = url;
     this.responders = [];
   }
   
-  Sockete.Server.prototype = {
+  Mocksock.Server.prototype = {
     addResponder: function (type, msg) {
-      var responder = new Sockete.Responder(type, msg);
+      var responder = new Mocksock.Responder(type, msg);
       this.responders.push(responder);
       return responder;
     },
@@ -27,17 +27,17 @@
       } else {
         switch(request.request_type) {
          case 'open': // should let client open connection
-          response = new Sockete.Response(request.client, 'open');
+          response = new Mocksock.Response(request.client, 'open');
          break;
          case 'close': // should let client open connection
-           response = new Sockete.Response(request.client, 'close');
+           response = new Mocksock.Response(request.client, 'close');
          break;
          default:
-          response = new Sockete.Response(request.client, 'close', '[Sockete.Server] No response configured for ' + request.toString());
+          response = new Mocksock.Response(request.client, 'close', '[Mocksock.Server] No response configured for ' + request.toString());
          break; 
         }
       }
-      Sockete.logRound(this, request, response)
+      Mocksock.logRound(this, request, response)
       callback( response );
     },
     
@@ -55,18 +55,18 @@
     }
   }
   
-  Sockete.servers = [];
+  Mocksock.servers = [];
   
-  Sockete.Server.configure = function (url, config) {
-    var server = new Sockete.Server(url);
+  Mocksock.Server.configure = function (url, config) {
+    var server = new Mocksock.Server(url);
     config.apply(server, []);
-    Sockete.servers.push(server);
+    Mocksock.servers.push(server);
     return server;
   }
   
-  Sockete.Server.find = function (url) {
-    for(var i=0, t=Sockete.servers.length;i<t;i++) {
-      if( Sockete.servers[i].match(url) ) return Sockete.servers[i];
+  Mocksock.Server.find = function (url) {
+    for(var i=0, t=Mocksock.servers.length;i<t;i++) {
+      if( Mocksock.servers[i].match(url) ) return Mocksock.servers[i];
     }
     return null;
   }
