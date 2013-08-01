@@ -1,18 +1,18 @@
 // var s = new WebSocket('ws://test.com');
 // s.onclose = function(evt) {console.log(evt)}
 
-var ok_server = Sockete.Server.configure('ws://ok.host', function () {
+var ok_server = Mocksock.Server.configure('ws://ok.host', function () {
   this.onmessage('blah').respond('Ok buddy!');
   this.onmessage('Wrong message').fail('So sorry');
 });
 
-var fail_server = Sockete.Server.configure('ws://fail.host', function () {
+var fail_server = Mocksock.Server.configure('ws://fail.host', function () {
   this.onconnect().fail('Nope!')
 });
 
 module('Mock server', {
   setup: function () {
-    Sockete.mock();
+    Mocksock.mock();
   }
 });
 

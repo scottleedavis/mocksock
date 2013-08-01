@@ -1,16 +1,10 @@
-## The point
 
-As a websockets client developer
+## Overview
 
-I want to mock the WebSocket object
+Mocksock provides mock connection/request/response handling for WebSockets.
 
-So I can simulate interaction with a websockets server on the browser
 
-And inspect a log of sent and received messages
-
-And test my client code without the need to setup an actual WebSockets server.
-
-## The gist
+## Usage
 
     Sockete.Server.configure('ws://fake.host', function () {
       
@@ -40,7 +34,7 @@ And test my client code without the need to setup an actual WebSockets server.
 
 ## Install
 
-    git pull
+    git clone git@github.com:skawtus/mocksock.git
     bundle install
     
 ## Test
@@ -54,10 +48,7 @@ Change version in ./Jfile and build distribution with
 
     jbundle
     
-Commit and push.
+##Credit
 
-## TODO
+Forked from the Sockete project.  Thanks mucho for starting this!
 
-- Be able to inspect message history on both server and client (kinda the point of this library)
-- Tokenized server URLs and messages, so we can test query variable strings, etc.
-- Be able to facading native Websocket (instead of completely replacing) so we can use with real server while maintaining history and testing capabilities (cool fo running integration tests?)

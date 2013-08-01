@@ -2,11 +2,11 @@ target_dir './dist'
 
 src_dir './src'
 
-version '0.0.1'
+version '0.0.2'
 
-bundle 'sockete.js' do
+bundle 'mocksock.js' do
   license 'license.txt'
-  file 'sockete.js'
+  file 'mocksock.js'
   file 'request.js'
   file 'response.js'
   file 'client.js'

@@ -8,12 +8,12 @@
       throw('Response for ' + responder.message + ' has already been set to ' + responder.__response_type + ' with ' + responder.__response_message)
   }
   
-  Sockete.Responder = function (event_type, message) {
+  Mocksock.Responder = function (event_type, message) {
     this.event_type = event_type;
     this.message = message;
   }
   
-  Sockete.Responder.prototype = {
+  Mocksock.Responder.prototype = {
     __response_type: null,
     __response_message: null,
     // Configuration API
@@ -35,7 +35,7 @@
     },
     
     response: function (client) {
-      return new Sockete.Response(client, this.__response_type, this.__response_message);
+      return new Mocksock.Response(client, this.__response_type, this.__response_message);
     }
   }
   

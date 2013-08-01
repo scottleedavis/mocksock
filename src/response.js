@@ -2,7 +2,7 @@
   
   /* Response object
   ------------------------------------*/
-  Sockete.Response = function(client, event_type, message) {
+  Mocksock.Response = function(client, event_type, message) {
 
     this.type = event_type;
     this.data = message;
