@@ -1,25 +1,45 @@
-/*  mock_websocket.js, version 0.0.1
-*  (c) 2011 Ismael Celis (@ismasan)
-*
-*  Released under MIT license.
+/*  
+mocksock.js, version 0.0.2
+The MIT License (MIT)
+
+Copyright (c) 2013 Scott Lee Davis (@skawtus)
+Copyright (c) 2011 Ismael Celis (@ismasan) 
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+
 */
-var Sockete = (function () {
+var Mocksock = (function () {
   
   function log_enabled () {
-    return window['console'] && Sockete.settings.log;
+    return window['console'] && Mocksock.settings.log;
   }
   
   return {
     mock: function () {
-      window['WebSocket'] = Sockete.Client;
+      window['WebSocket'] = Mocksock.Client;
     },
     logEvent: function(evt) {
       if(!log_enabled()) return false;
-      console.log(evt, '[Sockete.Response] - client ' + evt.currentTarget.__sockete_id + ' | ' + evt.type + ' : ' + evt.data);
+      console.log(evt, '[Mocksock.Response] - client ' + evt.currentTarget.__mocksock_id + ' | ' + evt.type + ' : ' + evt.data);
     },
     logRound: function (server, request, response) {
       if(!log_enabled()) return false;
-      console.log('[Sockete] client '+request.client.__sockete_id+':'+request.toString()+' => server '+server.URL+':'+response.toString());
+      console.log('[Mocksock] client '+request.client.__mocksock_id+':'+request.toString()+' => server '+server.URL+':'+response.toString());
     },
     settings: {
       // Needed so we can attach user event callbacks before connecting
@@ -34,15 +54,15 @@ var Sockete = (function () {
   // A request is sent from the client to the server and it
   // knows about the client and request type ('open', 'message', 'close')
   
-  Sockete.Request = function (client, request_type, message) {
+  Mocksock.Request = function (client, request_type, message) {
     this.client = client;
     this.request_type = request_type;
     this.message = message;
   }
   
-  Sockete.Request.prototype = {
+  Mocksock.Request.prototype = {
     toString: function () {
-      return '[Sockete.Request] ' + this.request_type + ' : ' + this.message;
+      return '[Mocksock.Request] ' + this.request_type + ' : ' + this.message;
     }
   }
   
@@ -52,7 +72,7 @@ var Sockete = (function () {
   
   /* Response object
   ------------------------------------*/
-  Sockete.Response = function(client, event_type, message) {
+  Mocksock.Response = function(client, event_type, message) {
 
     this.type = event_type;
     this.data = message;
@@ -73,19 +93,19 @@ var Sockete = (function () {
   
   // WebSocket mock. It is important that it implements the same API and public attributes
   // so we only add those to the prototype.
-  Sockete.clients = [];
+  Mocksock.clients = [];
   
-  Sockete.Client = function (url) {
+  Mocksock.Client = function (url) {
     
     // Stubs
     this.onmessage = function (evt) {
-      Sockete.logEvent(evt);
+      Mocksock.logEvent(evt);
     }
     this.onclose = function (evt) {
-      Sockete.logEvent(evt);
+      Mocksock.logEvent(evt);
     }
     this.onopen = function (evt) {
-      Sockete.logEvent(evt);
+      Mocksock.logEvent(evt);
     }
     
     var url = url;
@@ -98,13 +118,13 @@ var Sockete = (function () {
     
     this.close = function () {
       readyState(2);
-      var request = new Sockete.Request(self, 'close');
+      var request = new Mocksock.Request(self, 'close');
       self.__server.request(request, dispatch);
     }
     
     this.send = function (msg) {
       if(this.readyState != 1) return false;
-      var request = new Sockete.Request(self, 'message', msg);
+      var request = new Mocksock.Request(self, 'message', msg);
       self.__server.request(request, dispatch);
       return true;
     }
@@ -123,15 +143,15 @@ var Sockete = (function () {
     }
     
     function connect () {
-      self.__server = Sockete.Server.find(url);
-      if (!self.__server) throw('[Sockete.Client#connect] No server configured for URL ' + url)
-      var request = new Sockete.Request(self, 'open')
+      self.__server = Mocksock.Server.find(url);
+      if (!self.__server) throw('[Mocksock.Client#connect] No server configured for URL ' + url)
+      var request = new Mocksock.Request(self, 'open')
       self.__server.request(request, dispatch);
     }
-    setTimeout(connect, Sockete.settings.connecttion_delay);
+    setTimeout(connect, Mocksock.settings.connecttion_delay);
     
-    Sockete.clients.push(this);
-    this.__sockete_id = Sockete.clients.length;
+    Mocksock.clients.push(this);
+    this.__mocksock_id = Mocksock.clients.length;
   }
   
   
@@ -146,12 +166,12 @@ var Sockete = (function () {
       throw('Response for ' + responder.message + ' has already been set to ' + responder.__response_type + ' with ' + responder.__response_message)
   }
   
-  Sockete.Responder = function (event_type, message) {
+  Mocksock.Responder = function (event_type, message) {
     this.event_type = event_type;
     this.message = message;
   }
   
-  Sockete.Responder.prototype = {
+  Mocksock.Responder.prototype = {
     __response_type: null,
     __response_message: null,
     // Configuration API
@@ -173,7 +193,7 @@ var Sockete = (function () {
     },
     
     response: function (client) {
-      return new Sockete.Response(client, this.__response_type, this.__response_message);
+      return new Mocksock.Response(client, this.__response_type, this.__response_message);
     }
   }
   
@@ -181,14 +201,14 @@ var Sockete = (function () {
 })();
 (function () {
   
-  Sockete.Server = function (url) {
+  Mocksock.Server = function (url) {
     this.url = this.URL = url;
     this.responders = [];
   }
   
-  Sockete.Server.prototype = {
+  Mocksock.Server.prototype = {
     addResponder: function (type, msg) {
-      var responder = new Sockete.Responder(type, msg);
+      var responder = new Mocksock.Responder(type, msg);
       this.responders.push(responder);
       return responder;
     },
@@ -208,17 +228,17 @@ var Sockete = (function () {
       } else {
         switch(request.request_type) {
          case 'open': // should let client open connection
-          response = new Sockete.Response(request.client, 'open');
+          response = new Mocksock.Response(request.client, 'open');
          break;
          case 'close': // should let client open connection
-           response = new Sockete.Response(request.client, 'close');
+           response = new Mocksock.Response(request.client, 'close');
          break;
          default:
-          response = new Sockete.Response(request.client, 'close', '[Sockete.Server] No response configured for ' + request.toString());
+          response = new Mocksock.Response(request.client, 'close', '[Mocksock.Server] No response configured for ' + request.toString());
          break; 
         }
       }
-      Sockete.logRound(this, request, response)
+      Mocksock.logRound(this, request, response)
       callback( response );
     },
     
@@ -236,18 +256,18 @@ var Sockete = (function () {
     }
   }
   
-  Sockete.servers = [];
+  Mocksock.servers = [];
   
-  Sockete.Server.configure = function (url, config) {
-    var server = new Sockete.Server(url);
+  Mocksock.Server.configure = function (url, config) {
+    var server = new Mocksock.Server(url);
     config.apply(server, []);
-    Sockete.servers.push(server);
+    Mocksock.servers.push(server);
     return server;
   }
   
-  Sockete.Server.find = function (url) {
-    for(var i=0, t=Sockete.servers.length;i<t;i++) {
-      if( Sockete.servers[i].match(url) ) return Sockete.servers[i];
+  Mocksock.Server.find = function (url) {
+    for(var i=0, t=Mocksock.servers.length;i<t;i++) {
+      if( Mocksock.servers[i].match(url) ) return Mocksock.servers[i];
     }
     return null;
   }
