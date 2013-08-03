@@ -4,6 +4,18 @@
 var ok_server = Mocksock.Server.configure('ws://ok.host', function () {
   this.onmessage('blah').respond('Ok buddy!');
   this.onmessage('Wrong message').fail('So sorry');
+
+  var jsonObj = {
+    'test': 'test-val',
+    'test2': 'test-val-2'
+  };
+  var jsonRespObj = {
+    'test': 'all good',
+    'test2': 'total legit'
+  };
+  var JSONString = JSON.stringify(jsonObj);
+  var JSONStringResp = JSON.stringify(jsonRespObj);
+  this.onmessage(JSONString).respond(JSONStringResp);
 });
 
 var fail_server = Mocksock.Server.configure('ws://fail.host', function () {
@@ -43,6 +55,27 @@ asyncTest('it matches messages on successful message', function () {
   }, 12);
 });
 
+
+asyncTest('trying JSON encoded message', function () {
+  var socket = new WebSocket('ws://ok.host');
+  var response = null;
+  socket.onmessage = function (evt) {
+    response = evt.data;
+  }
+  setTimeout(function(){
+      var jsonObj = {
+        'test': 'test-val',
+        'test2': 'test-val-2'
+      };
+      var jsonRespObj = {
+        'test': 'all good',
+        'test2': 'total legit'
+      };
+      socket.send(JSON.stringify(jsonObj));
+      equal(response, JSON.stringify(jsonRespObj) );
+      start();
+  }, 12);
+});
 
 asyncTest('it closes socket if server configured to fail on connect', function () {
   var socket = new WebSocket('ws://fail.host');

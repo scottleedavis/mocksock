@@ -31,7 +31,8 @@
     },
     // Public methods
     match: function (request) {
-      return request.request_type == this.event_type;
+      return ( (request.request_type === this.event_type) &&
+        (request.message === this.message) );
     },
     
     response: function (client) {

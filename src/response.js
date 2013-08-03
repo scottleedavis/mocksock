@@ -9,11 +9,11 @@
     this.currentTarget = client;
 
     function textStatus () {
-      return event_type == 'open' ? 'success' : 'fail';
+      return this.type === 'open' ? 'success' : 'fail';
     }
 
     this.toString = function () {
-      return '[' + textStatus() + '] ' + message;
+      return '[' + textStatus() + '] ' + this.data;
     }
   }
   
