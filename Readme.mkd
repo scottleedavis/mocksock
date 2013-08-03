@@ -6,28 +6,38 @@ Mocksock provides mock connection/request/response handling for WebSockets.
 
 ## Usage
 
-    Sockete.Server.configure('ws://fake.host', function () {
-      
-      this.onmessage('blah').respond('Ok buddy!');
-      
-      this.onmessage('Wrong message').fail('So sorry');
-      
-      // this.onconnect().fail('Nope!')
-    });
+  var ok_server = Mocksock.Server.configure('ws://ok.host', function () {
+
+    var jsonObj = {
+      'test': 'test-val',
+      'test2': 'test-val-2'
+    };
+    var jsonRespObj = {
+      'test': 'all good',
+      'test2': 'total legit'
+    };
+
+    var JSONString = JSON.stringify(jsonObj);
+    var JSONStringResp = JSON.stringify(jsonRespObj);
+    this.onmessage(JSONString).respond(JSONStringResp);
+
+  });
+
     
-    // Replace native window.WebSocket with Sockete.Client
+    // Replace native window.WebSocket with MockSock.Client
+    MockSock.mock();
     
-    Sockete.mock();
-    
-    var socket = new WebSocket('ws://fake.host');
-    
-    socket.readyState // => 1 (CONNECTED)
-    
-    socket.onmessage = function (evt) {
-      console.log(evt.data)
-    }
-    
-    socket.send('blah'); // => logs 'Ok buddy!'
+    var socket = new WebSocket('ws://ok.host');
+
+    var jsonObj = {
+      'test': 'test-val',
+      'test2': 'test-val-2'
+    };
+    var jsonRespObj = {
+      'test': 'all good',
+      'test2': 'total legit'
+    };
+    socket.send(JSON.stringify(jsonObj));  //responds with jsonRespObj as noted above.
     
     socket.send('Wrong message'); // => closes connection and fires socket.onclose()
 
@@ -50,5 +60,5 @@ Change version in ./Jfile and build distribution with
     
 ##Credit
 
-Forked from the Sockete project.  Thanks mucho for starting this!
+Forked from the Sockete project.  Thanks mucho for starting WebSocket mocking!
 

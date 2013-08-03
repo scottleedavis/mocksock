@@ -1,5 +1,3 @@
-// var s = new WebSocket('ws://test.com');
-// s.onclose = function(evt) {console.log(evt)}
 
 var ok_server = Mocksock.Server.configure('ws://ok.host', function () {
 
