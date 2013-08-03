@@ -44,7 +44,7 @@
     // URL matching
     // Should do regexes, tokens, etc.
     match: function (url) {
-      return url == this.url; 
+      return url === this.url; 
     },
     
     findResponder: function (request) {
