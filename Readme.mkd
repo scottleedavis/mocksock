@@ -4,24 +4,25 @@
 Mocksock provides mock connection/request/response handling for WebSockets.
 
 
+
 ## Usage
 
-  var ok_server = Mocksock.Server.configure('ws://ok.host', function () {
+    var ok_server = Mocksock.Server.configure('ws://ok.host', function () {
 
-    var jsonObj = {
-      'test': 'test-val',
-      'test2': 'test-val-2'
-    };
-    var jsonRespObj = {
-      'test': 'all good',
-      'test2': 'total legit'
-    };
+      var jsonObj = {
+        'test': 'test-val',
+        'test2': 'test-val-2'
+      };
+      var jsonRespObj = {
+        'test': 'all good',
+        'test2': 'total legit'
+      };
 
-    var JSONString = JSON.stringify(jsonObj);
-    var JSONStringResp = JSON.stringify(jsonRespObj);
-    this.onmessage(JSONString).respond(JSONStringResp);
+      var JSONString = JSON.stringify(jsonObj);
+      var JSONStringResp = JSON.stringify(jsonRespObj);
+      this.onmessage(JSONString).respond(JSONStringResp);
 
-  });
+    });
 
     
     // Replace native window.WebSocket with MockSock.Client
@@ -42,17 +43,17 @@ Mocksock provides mock connection/request/response handling for WebSockets.
     socket.send('Wrong message'); // => closes connection and fires socket.onclose()
 
 
-## Install
+## Build Install
 
     git clone git@github.com:skawtus/mocksock.git
     bundle install
     
-## Test
+## Build Test
 
     ruby test/app.rb
     open test/index.html
 
-## Release
+## Build Release
 
 Change version in ./Jfile and build distribution with
 
