@@ -14,8 +14,10 @@
   }
   
   Mocksock.Responder.prototype = {
+
     __response_type: null,
     __response_message: null,
+
     // Configuration API
     respond: function (message) {
       guardResponseNotSet(this);
@@ -38,6 +40,7 @@
     response: function (client) {
       return new Mocksock.Response(client, this.__response_type, this.__response_message);
     }
+    
   }
   
   

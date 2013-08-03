@@ -11,7 +11,9 @@
   
   Mocksock.Request.prototype = {
     toString: function () {
-      return '[Mocksock.Request] ' + this.request_type + ' : ' + this.message;
+      var request_type = this.request_type ? this.request_type : '' ;
+      var message = this.message ? this.message : '';
+      return '[Mock Socket Request] ' + request_type + ' : ' + message;
     }
   }
   
