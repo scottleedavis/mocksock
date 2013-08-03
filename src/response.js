@@ -8,12 +8,16 @@
     this.data = message;
     this.currentTarget = client;
 
-    function textStatus () {
-      return this.type === 'open' ? 'success' : 'fail';
+    this.textStatus = function() {
+      return (this.type === 'open' || this.type === 'message') ? 'success' : 'fail';
     }
 
-    this.toString = function () {
-      return '[' + textStatus() + '] ' + this.data;
+    this.textContent = function() {
+      return this.data ? this.data : '';
+    }
+
+    this.toString = function() {
+      return '[' + this.textStatus() + '] ' + this.textContent();
     }
   }
   

@@ -8,9 +8,14 @@ var Mocksock = (function () {
     mock: function () {
       window['WebSocket'] = Mocksock.Client;
     },
+
     logEvent: function(evt) {
       if(!log_enabled()) return false;
-      console.log(evt, '[Mocksock.Response] - client ' + evt.currentTarget.__mocksock_id + ' | ' + evt.type + ' : ' + evt.data);
+
+      var mocksock_id = evt.currentTarget.__mocksock_id ? evt.currentTarget.__mocksock_id : '' ;
+      var event_type = evt.type ? evt.type : '';
+      var event_data = evt.data ? evt.data : '';
+      console.log('[Mocksock.Response] - client ' + mocksock_id + ' | ' + event_type + ' : ' + event_data );
     },
     logRound: function (server, request, response) {
       if(!log_enabled()) return false;
@@ -18,7 +23,7 @@ var Mocksock = (function () {
     },
     settings: {
       // Needed so we can attach user event callbacks before connecting
-      connection_delay: 10,
+      //connection_delay: 10,
       // Logging switch
       log: true
     }
