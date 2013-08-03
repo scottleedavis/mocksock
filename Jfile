@@ -2,7 +2,7 @@ target_dir 'dist'
 
 src_dir 'src'
 
-version '0.0.2'
+version '0.0.3'
 
 bundle 'mocksock.js' do
   license 'license.txt'
