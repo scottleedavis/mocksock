@@ -29,7 +29,7 @@ var ok_server = Mocksock.Server.configure('ws://ok.host', function () {
 
 module('Mock server', {
   setup: function () {
-    Mocksock.mock();
+    Mocksock.mock({log:false});
   }
 });
 
