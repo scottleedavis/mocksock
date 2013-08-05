@@ -54,7 +54,7 @@ Mocksock provides mock connection/request/response handling for WebSockets.
 
     setTimeout(function(){
         socket.send(JSON.stringify(jsonObj2));
-   }, 1);
+    }, 1);
 
 
 ## Build Install
