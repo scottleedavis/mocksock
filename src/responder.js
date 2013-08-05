@@ -17,12 +17,16 @@
 
     __response_type: null,
     __response_message: null,
+    client: null,
+    options: null,
 
     // Configuration API
-    respond: function (message) {
+    respond: function (message, options) {
       guardResponseNotSet(this);
       this.__response_type = 'message';
       this.__response_message = message;
+      if( options )
+        this.options = options;
       return this;
     },
     fail: function (message) {
@@ -31,6 +35,7 @@
       this.__response_message = message;
       return this;
     },
+
     // Public methods
     match: function (request) {
       return ( (request.request_type === this.event_type) &&
@@ -38,6 +43,7 @@
     },
     
     response: function (client) {
+      this.client = client;
       return new Mocksock.Response(client, this.__response_type, this.__response_message);
     }
     

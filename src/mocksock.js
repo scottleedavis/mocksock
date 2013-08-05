@@ -28,7 +28,12 @@ var Mocksock = (function () {
 
     logRound: function (server, request, response) {
       if(!log_enabled()) return false;
-      console.log('[Mocksock] client '+request.client.__mocksock_id+':'+request.toString()+' => server '+server.URL+':'+response.toString());
+
+      var request_id = request ? request.client.__mocksock_id : '';
+      var request_str = request ? request.toString() : '';
+      var server_url = server ? server.URL : '';
+      var response_str = response ? response.toString() : '';
+      console.log('[Mocksock] client '+request_id+':'+request_str+' => server '+server_url+':'+response_str);
     }
     
   };

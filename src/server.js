@@ -19,11 +19,44 @@
       return this.addResponder('open', '');
     },
     
+    doResponse: function(callback, request, response){
+        Mocksock.logRound(this, request, response);
+        callback( response );
+
+    },
+
     // Client API
     request: function (request, callback) {
       var response;
       if (responder = this.findResponder(request)) {
+        
         response = responder.response(request.client);
+        var count = 1;
+        var delay = 1;
+
+        if( responder.options  ){
+
+          count = typeof responder.options.count !== 'undefined' ? responder.options.count : 1;
+          delay = typeof responder.options.delay !== 'undefined' ? responder.options.delay : 1;
+
+        }
+        
+        var _this = this;
+
+        for(var i=0; i<count; i++){
+
+          setTimeout( function(){
+            
+            _this.doResponse(callback, request, response );
+
+          }, delay*(i+1));      
+
+        }
+
+  
+
+
+
       } else {
         switch(request.request_type) {
          case 'open': // should let client open connection
@@ -36,9 +69,10 @@
           response = new Mocksock.Response(request.client, 'close', '[Mocksock.Server] No response configured for ' + request.toString());
          break; 
         }
+        Mocksock.logRound(this, request, response)
+        callback( response );     
       }
-      Mocksock.logRound(this, request, response)
-      callback( response );
+
     },
     
     // URL matching
