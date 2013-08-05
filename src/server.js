@@ -19,9 +19,16 @@
       return this.addResponder('open', '');
     },
     
-    doResponse: function(callback, request, response){
-        Mocksock.logRound(this, request, response);
+    doResponse: function(callback, request, response, count, delay, first){
+        Mocksock.logRound(this, request, response, first);
         callback( response );
+        if( count > 1 ){
+
+          var _this = this;
+          setTimeout( function(){
+            _this.doResponse(callback, request, response, count-1, delay, false);
+          }, delay);
+        }
 
     },
 
@@ -41,21 +48,7 @@
 
         }
         
-        var _this = this;
-
-        for(var i=0; i<count; i++){
-
-          setTimeout( function(){
-            
-            _this.doResponse(callback, request, response );
-
-          }, delay*(i+1));      
-
-        }
-
-  
-
-
+        this.doResponse(callback, request, response, count, delay, true);
 
       } else {
         switch(request.request_type) {

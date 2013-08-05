@@ -7,29 +7,6 @@ Mocksock provides mock connection/request/response handling for WebSockets.
 
 ## Usage
 
-    var ok_server = Mocksock.Server.configure('ws://ok.host', function () {
-
-      var jsonObj = {
-        'test': 'test-val',
-        'test2': 'test-val-2'
-      };
-      var jsonRespObj = {
-        'test': 'all good',
-        'test2': 'total legit'
-      };
-
-      var JSONString = JSON.stringify(jsonObj);
-      var JSONStringResp = JSON.stringify(jsonRespObj);
-      this.onmessage(JSONString).respond(JSONStringResp);
-
-    });
-
-    
-    // Replace native window.WebSocket with MockSock.Client
-    MockSock.mock();
-    
-    var socket = new WebSocket('ws://ok.host');
-
     var jsonObj = {
       'test': 'test-val',
       'test2': 'test-val-2'
@@ -38,9 +15,48 @@ Mocksock provides mock connection/request/response handling for WebSockets.
       'test': 'all good',
       'test2': 'total legit'
     };
-    socket.send(JSON.stringify(jsonObj));  //responds with jsonRespObj as noted above.
-    
-    socket.send('Wrong message'); // => closes connection and fires socket.onclose()
+    var jsonObj2 = {
+      'test44': 'test-val',
+      'test22': 'test-val-2'
+    };
+    var jsonRespObj2 = {
+      'test44': 'pass',
+      'test22': 'pass'
+    };
+
+    var JSONString = JSON.stringify(jsonObj);
+    var JSONString2 = JSON.stringify(jsonObj2);
+    var JSONStringResp = JSON.stringify(jsonRespObj);
+    var JSONStringResp2 = JSON.stringify(jsonRespObj2);
+
+    var ok_server = Mocksock.Server.configure('ws://ok.host', function () {
+
+
+      //a default 1-to-1 response per message
+      this.onmessage(JSONString).respond(JSONStringResp );
+
+      //a many-to-1 response per message with configurable delay
+      this.onmessage(JSONString2).respond(JSONStringResp2, {count:20, delay:10} );
+
+
+    });
+
+    // Replace native window.WebSocket with MockSock.Client
+    Mocksock.mock({log:true});
+
+    var socket = new WebSocket('ws://ok.host');
+    var response = null;
+
+
+    socket.onmessage = function (evt) {
+      response = evt.data;
+    };
+
+    setTimeout(function(){
+        socket.send(JSON.stringify(jsonObj2));
+   }, 1);
+
+});
 
 
 ## Build Install

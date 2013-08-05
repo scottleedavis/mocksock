@@ -13,7 +13,7 @@
     toString: function () {
       var request_type = this.request_type ? this.request_type : '' ;
       var message = this.message ? this.message : '';
-      return '[Mock Socket Request] ' + request_type + ' : ' + message;
+      return '[Request] ' + request_type + ' : ' + message;
     }
   }
   

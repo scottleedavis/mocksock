@@ -36,7 +36,7 @@ var ok_server = Mocksock.Server.configure('ws://ok.host', function () {
 
   this.onmessage(JSONString2).respond(JSONStringResp2);
 
-  this.onmessage(JSONString3).respond(JSONStringResp3, {count:1, delay:1} );
+  this.onmessage(JSONString3).respond(JSONStringResp3, {count:20, delay:10} );
 
 });
 
@@ -120,9 +120,8 @@ asyncTest('trying different JSON encoded message', function () {
 
 });
 
-asyncTest('trying multi-response JSON encoded message', function () {
+asyncTest('trying multi-response JSON encoded message', 20, function () {
 
-  expect(3);
   var socket = new WebSocket('ws://ok.host');
   var response = null;
   var jsonObj3 = {
@@ -134,31 +133,19 @@ asyncTest('trying multi-response JSON encoded message', function () {
     'test11': 'pass'
   };
 
-  start();
-  
+
   socket.onmessage = function (evt) {
     response = evt.data;
     equal(response, JSON.stringify(jsonRespObj3) );
-    stop();
   };
 
-
   setTimeout(function(){
-
       socket.send(JSON.stringify(jsonObj3));
-
-
  }, 1);
 
-
   setTimeout(function(){
-
-      //socket.send(JSON.stringify(jsonObj3));
-      //equal(response, JSON.stringify(jsonRespObj3) );
-     start();
-     //stop();
-
- }, 1000);
+    start();
+  },1000)
 
 
 });
