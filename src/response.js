@@ -4,6 +4,7 @@
   ------------------------------------*/
   Mocksock.Response = function(client, event_type, message) {
 
+    this.client = client;
     this.type = event_type;
     this.data = message;
     this.currentTarget = client;

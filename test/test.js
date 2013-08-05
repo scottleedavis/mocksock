@@ -17,19 +17,33 @@ var ok_server = Mocksock.Server.configure('ws://ok.host', function () {
     'test44': 'pass',
     'test22': 'pass'
   };
+  var jsonObj3 = {
+    'test88': 'test-val',
+    'test11': 'test-val-2'
+  };
+  var jsonRespObj3 = {
+    'test88': 'pass',
+    'test11': 'pass'
+  };
   var JSONString = JSON.stringify(jsonObj);
   var JSONString2 = JSON.stringify(jsonObj2);
+  var JSONString3 = JSON.stringify(jsonObj3);
   var JSONStringResp = JSON.stringify(jsonRespObj);
   var JSONStringResp2 = JSON.stringify(jsonRespObj2);
-  this.onmessage(JSONString).respond(JSONStringResp);
+  var JSONStringResp3 = JSON.stringify(jsonRespObj3);
+
+  this.onmessage(JSONString).respond(JSONStringResp );
+
   this.onmessage(JSONString2).respond(JSONStringResp2);
+
+  this.onmessage(JSONString3).respond(JSONStringResp3, {count:20, delay:10} );
 
 });
 
 
 module('Mock server', {
   setup: function () {
-    Mocksock.mock();
+    Mocksock.mock({log:true});
   }
 });
 
@@ -64,14 +78,15 @@ asyncTest('trying JSON encoded message', function () {
 
   socket.onmessage = function (evt) {
     response = evt.data;
+    equal(response, JSON.stringify(jsonRespObj) );
+    start();
+
   };
 
 
   setTimeout(function(){
 
       socket.send(JSON.stringify(jsonObj));
-      equal(response, JSON.stringify(jsonRespObj) );
-      start();
 
  }, 1);
 
@@ -92,16 +107,46 @@ asyncTest('trying different JSON encoded message', function () {
 
   socket.onmessage = function (evt) {
     response = evt.data;
+    equal(response, JSON.stringify(jsonRespObj2) );
+    start();
   };
 
 
   setTimeout(function(){
 
       socket.send(JSON.stringify(jsonObj2));
-      equal(response, JSON.stringify(jsonRespObj2) );
-      start();
 
  }, 1);
+
+});
+
+asyncTest('trying multi-response JSON encoded message', 20, function () {
+
+  var socket = new WebSocket('ws://ok.host');
+  var response = null;
+  var jsonObj3 = {
+    'test88': 'test-val',
+    'test11': 'test-val-2'
+  };
+  var jsonRespObj3 = {
+    'test88': 'pass',
+    'test11': 'pass'
+  };
+
+
+  socket.onmessage = function (evt) {
+    response = evt.data;
+    equal(response, JSON.stringify(jsonRespObj3) );
+  };
+
+  setTimeout(function(){
+      socket.send(JSON.stringify(jsonObj3));
+ }, 1);
+
+  setTimeout(function(){
+    start();
+  },1000)
+
 
 });
 
