@@ -5,7 +5,7 @@
   Mocksock.clients = [];
   
   Mocksock.Client = function (url) {
-    
+
     // Stubs
     this.onmessage = function (evt) {
       Mocksock.logEvent(evt);
@@ -65,3 +65,8 @@
   
   
 })();
+
+ Mocksock.Client.CONNECTING = 0;
+ Mocksock.Client.OPEN = 1;
+ Mocksock.Client.CLOSING = 2;
+ Mocksock.Client.CLOSED = 3;
